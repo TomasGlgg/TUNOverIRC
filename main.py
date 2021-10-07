@@ -1,9 +1,9 @@
 from pytun import TunTapDevice
 from threading import Thread
 from irc_client import IRC
-from base64 import b85decode, b85encode
 from configparser import ConfigParser
 from multipledispatch import dispatch
+import base91
 
 
 @dispatch(str)
@@ -24,7 +24,7 @@ def get_src_dst(pkt):
 
 def recv_irc_packet(message):
     print('Received:', message)
-    pkt = b85decode(message)
+    pkt = base91.decode(message)
     tun.write(pkt)
 
 
@@ -44,7 +44,7 @@ def main():
     irc.connect_privmsg(recv_irc_packet)
     Thread(target=irc.process).start()
 
-    mtu = 400  # TODO
+    mtu = int(400*(2-1.231))  # TODO
 
     global tun
     tun = TunTapDevice(interface_name)
@@ -59,7 +59,7 @@ def main():
         source, destination = get_src_dst(pkt)
         destination_nick = nick_prefix + address_to_nick(destination)
         print('Destination: {}, destination nick: {}'.format(destination, destination_nick))
-        message = b85encode(pkt).decode()
+        message = base91.encode(pkt)
         irc.send(destination_nick, message)
 
 
