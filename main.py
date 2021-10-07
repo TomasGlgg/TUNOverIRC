@@ -24,7 +24,7 @@ def get_src_dst(pkt):
 
 def recv_irc_packet(message):
     print('Received:', message)
-    pkt = base91.decode(message)
+    pkt = bytes(base91.decode(message))
     tun.write(pkt)
 
 
