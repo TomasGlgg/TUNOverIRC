@@ -11,7 +11,7 @@ class IRC:
 
     def __on_connect(self, _, __):
         print('IRC connected. Nick: {}'.format(self.nick))
-        self.client.mode(self.nick, '+bx')
+        self.client.mode(self.nick, '+Bx')
 
     def __init__(self, host, port, nick):
         self.client = self.reactor.server()
